@@ -493,13 +493,36 @@ Map<String, LocalWidgetBuilder> get _coreWidgetsDefinitions =>
           softWrap: source.v<bool>(['softWrap']),
           overflow: ArgumentDecoders.enumValue<TextOverflow>(
               TextOverflow.values, source, ['overflow']),
-          textScaleFactor: source.v<double>(['textScaleFactor']),
           maxLines: source.v<int>(['maxLines']),
           semanticsLabel: source.v<String>(['semanticsLabel']),
           textWidthBasis: ArgumentDecoders.enumValue<TextWidthBasis>(
               TextWidthBasis.values, source, ['textWidthBasis']),
           textHeightBehavior: ArgumentDecoders.textHeightBehavior(
               source, ['textHeightBehavior']),
+        );
+      },
+      'TextField': (BuildContext context, DataSource source) {
+        String? text = source.v<String>(['hintText']);
+        if (text == null) {
+          final StringBuffer builder = StringBuffer();
+          final int count = source.length(['hintText']);
+          for (int index = 0; index < count; index += 1) {
+            builder.write(source.v<String>(['hintText', index]) ?? '');
+          }
+          text = builder.toString();
+        }
+        return TextField(
+          onChanged: source.handler(
+            ['onChanged'],
+            (HandlerTrigger trigger) =>
+                (String val) => trigger(<String, Object>{'newText': val}),
+          ),
+          decoration: InputDecoration(hintText: text),
+          style: ArgumentDecoders.textStyle(source, ['style']),
+          strutStyle: ArgumentDecoders.strutStyle(source, ['strutStyle']),
+          textDirection: ArgumentDecoders.enumValue<TextDirection>(
+              TextDirection.values, source, ['textDirection']),
+          maxLines: source.v<int>(['maxLines']),
         );
       },
       'Wrap': (BuildContext context, DataSource source) {

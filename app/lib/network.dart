@@ -66,7 +66,7 @@ class _NetworkExampleState extends State<NetworkExample> {
 
   void onEvent(String name, DynamicMap arguments) async {
     debugPrint('event $name($arguments)');
-    _logic.evaluate('$name()');
+    _logic.evaluate('$name(${jsonEncode(arguments)})');
     $state();
   }
 

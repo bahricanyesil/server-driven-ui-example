@@ -6,9 +6,9 @@ import 'dart:io';
 import 'package:dart_frog/dart_frog.dart';
 
 
-import '../routes/index.dart' as index;
 import '../routes/counter.rfw.dart' as counter_rfw;
 import '../routes/counter.js.dart' as counter_js;
+import '../routes/old/index.dart' as old_index;
 
 
 void main() async {
@@ -25,14 +25,22 @@ Future<HttpServer> createServer(InternetAddress address, int port) {
 Handler buildRootHandler() {
   final pipeline = const Pipeline();
   final router = Router()
+    ..mount('/old', (context) => buildOldHandler()(context))
     ..mount('/', (context) => buildHandler()(context));
+  return pipeline.addHandler(router);
+}
+
+Handler buildOldHandler() {
+  final pipeline = const Pipeline();
+  final router = Router()
+    ..all('/', (context) => old_index.onRequest(context,));
   return pipeline.addHandler(router);
 }
 
 Handler buildHandler() {
   final pipeline = const Pipeline();
   final router = Router()
-    ..all('/', (context) => index.onRequest(context,))..all('/counter.rfw', (context) => counter_rfw.onRequest(context,))..all('/counter.js', (context) => counter_js.onRequest(context,));
+    ..all('/counter.rfw', (context) => counter_rfw.onRequest(context,))..all('/counter.js', (context) => counter_js.onRequest(context,));
   return pipeline.addHandler(router);
 }
 

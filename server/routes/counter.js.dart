@@ -10,7 +10,16 @@ Response onRequest(RequestContext context) {
 const template = '''
 var state = {
   value: "0",
+  text: "",
 };
+
+function setText(e) {
+  const jsonRes = JSON.stringify(e);
+  const jsonParsed = JSON.parse(jsonRes);
+  const newText = jsonParsed.newText; 
+  state.text = newText;
+  console.log(state.text);
+}
 
 function increment() {
   const current = parseInt(state.value);

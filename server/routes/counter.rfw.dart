@@ -22,6 +22,7 @@ widget root = Scaffold(
     child: Column(
       mainAxisAlignment: "center",
       children: [
+        TextField(onChanged: event "setText" {}), 
         Text(text: ["You have pushed the button this many times:"]),
         Text(
           text: [data.state.value],
